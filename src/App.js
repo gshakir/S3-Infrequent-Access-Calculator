@@ -27,8 +27,25 @@ const prices = {
     'pp8' : {s3: [40.8, 40.1, 39.4, 38.7, 38.0, 37.4], s3ia: 26.0, put: 7.0, putia: 10, get: 0.56, getia: 1, data: 0.01},
 }
 
+const useLocale = toLocaleStringSupportsLocales()
+
 function currencyFormat(total) {
-    return Number(total).toLocaleString('en-US', { style: 'currency', currency: 'USD' });
+    if(useLocale) {
+        return Number(total).toLocaleString('en-US', { style: 'currency', currency: 'USD' });
+    }
+    else {
+        return "$" + Number(total).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
+}
+
+function toLocaleStringSupportsLocales() {
+    var number = 0;
+    try {
+        number.toLocaleString('i');
+    } catch (e) {
+        return e.name === 'RangeError';
+    }
+    return false;
 }
 
 const AwsRegion = ({region, onSelect}) => (
